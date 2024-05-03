@@ -1,0 +1,36 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with: 
+          context: .
+          file: ./Dockerfile
+          platform: linux/amd64,linux/arm64
+          tags: shirokumo/apt-mirror2:4,shirokumo/apt-mirror2:latest
+          build-args: BUILD_DATE=$(date --rfc-3339=seconds)
+          push: true
+          
