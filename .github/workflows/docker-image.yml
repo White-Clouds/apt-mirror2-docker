@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Get current date
         id: date
-        run: echo "::set-output name=date::$(date --rfc-3339=seconds)"
+        run: echo "CURRENT_DATE=$(date --rfc-3339=seconds)" >> $GITHUB_OUTPUT
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,7 +29,7 @@ jobs:
           images: |
             shirokumo/apt-mirror2
           labels: |
-            org.opencontainers.image.created=${{ steps.date.outputs.date }}
+            org.opencontainers.image.created=${{ steps.date.outputs.CURRENT_DATE }}
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.title="apt-mirror2"
             org.opencontainers.image.description="一个apt-mirror2的docker实现，减小了镜像体积，添加了Nginx服务。A docker implementation of apt-mirror2, which reduces the mirror size and adds Nginx service."
