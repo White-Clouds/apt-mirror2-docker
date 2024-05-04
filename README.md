@@ -1,4 +1,7 @@
-# 简介 About
+# apt-mirror2-docker
+
+## 简介 About
+
 这个仓库是[apt-mirror2](https://gitlab.com/apt-mirror2/apt-mirror2 "apt-mirror2")的其中一个docker实现[shirokumo/apt-mirror2](https://hub.docker.com/r/shirokumo/apt-mirror2)的构建部分；我所作的部分就是构建一个相对较小的docker镜像来运行apt-mirror2。
 
 镜像采用`alpine:3.19.1`作为基础镜像，安装有`Nginx`，最后生成的镜像大小约80MB。
@@ -9,14 +12,16 @@
 
 目前容器添加了一个每20分钟运行一次的`check.sh`来解决速度为0的问题，在检测到40行同样的输出时会重启进程。
 
-# 使用说明 Usage
+## 使用说明 Usage
+
 - 请在创建容器前配置好[`mirror.list`](https://gitlab.com/apt-mirror2/apt-mirror2/-/blob/master/mirror.list "mirror.list")
 - 容器的默认`mirror.list`位置是`/etc/apt/mirror.list`
 - `mirror.list`里默认的同步位置是`/var/spool/apt-mirror`，同时也是`Nginx`的默认根目录，请不要修改
 - `Nginx`配置在`80`端口
 
-# 环境变量 ENV
+## 环境变量 ENV
+
 |  变量名 | 默认值  | 说明  |
 | :------------: | :------------: | :------------: |
 |  TZ |  Asia/Shanghai |  时区设置 |
-|  CRON_SCHEDULE |  0 2,8,14,20 * * * |  同步执行时间 |
+|  CRON_SCHEDULE |  0 2,8,14,20 \* \* \* |  同步执行时间 |

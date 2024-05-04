@@ -36,14 +36,6 @@ COPY healthcheck.sh /healthcheck.sh
 RUN chmod +x /healthcheck.sh
 HEALTHCHECK --interval=5m --timeout=10s --start-period=10s --retries=3 CMD /bin/sh /healthcheck.sh
 
-# Set LABEL
-ARG BUILD_DATE
-LABEL org.opencontainers.image.created=$BUILD_DATE
-LABEL org.opencontainers.image.licenses="GPL-3.0-or-later"
-LABEL org.opencontainers.image.title="apt-mirror2"
-LABEL org.opencontainers.image.source="https://gitlab.com/apt-mirror2/apt-mirror2"
-LABEL org.opencontainers.image.version="4"
-
 # Copy entrypoint.sh to the container
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh

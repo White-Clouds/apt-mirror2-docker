@@ -9,6 +9,10 @@ jobs:
   build_and_push:
     runs-on: ubuntu-latest
     steps:
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date --rfc-3339=seconds)"
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -18,22 +22,39 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            shirokumo/apt-mirror2
+          labels: |
+            org.opencontainers.image.created=${{ steps.date.outputs.date }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.title="apt-mirror2"
+            org.opencontainers.image.description="一个apt-mirror2的docker实现，减小了镜像体积，添加了Nginx服务。A docker implementation of apt-mirror2, which reduces the mirror size and adds Nginx service."
+            org.opencontainers.image.licenses="GPL-3.0-or-later"
+            org.opencontainers.image.authors="White-Clouds"
+            org.opencontainers.image.source="https://github.com/White-Clouds/apt-mirror2-docker"
+            org.opencontainers.image.url="https://github.com/White-Clouds/apt-mirror2-docker"
+            org.opencontainers.image.version="4"
+
       - name: login
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      
-      - name: Get current date
-        id: date
-        run: echo "::set-output name=date::$(date --rfc-3339=seconds)"
 
       - name: Build and push
         uses: docker/build-push-action@v5
-        with: 
+        with:
           context: .
           file: ./Dockerfile
-          platforms: linux/amd64,linux/arm64
-          tags: shirokumo/apt-mirror2:4,shirokumo/apt-mirror2:latest
-          build-args: BUILD_DATE=${{ steps.date.outputs.date }}
+          platforms: |
+            linux/amd64
+            linux/arm64
+          tags: |
+            shirokumo/apt-mirror2:4
+            shirokumo/apt-mirror2:latest
+          labels: ${{ steps.meta.outputs.labels }}
           push: true
