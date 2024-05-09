@@ -37,7 +37,7 @@ jobs:
             org.opencontainers.image.authors=White-Clouds
             org.opencontainers.image.source=https://github.com/White-Clouds/apt-mirror2-docker
             org.opencontainers.image.url=https://github.com/White-Clouds/apt-mirror2-docker
-            org.opencontainers.image.version=4
+            org.opencontainers.image.version=5
 
       - name: login
         uses: docker/login-action@v3
@@ -54,7 +54,7 @@ jobs:
             linux/amd64
             linux/arm64
           tags: |
-            shirokumo/apt-mirror2:4
+            shirokumo/apt-mirror2:5
             shirokumo/apt-mirror2:latest
           labels: ${{ steps.meta.outputs.labels }}
           push: true

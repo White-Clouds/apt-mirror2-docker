@@ -1,5 +1,13 @@
 # apt-mirror2-docker
 
+[![license](https://img.shields.io/github/license/White-Clouds/apt-mirror2-docker)](https://github.com/White-Clouds/apt-mirror2-docker/blob/main/LICENSE)
+[![commits](https://img.shields.io/github/commit-activity/t/White-Clouds/apt-mirror2-docker)](https://github.com/White-Clouds/apt-mirror2-docker/commits/main/)
+![last commit](https://badgen.net/github/last-commit/White-Clouds/apt-mirror2-docker)
+[![actions](https://img.shields.io/github/actions/workflow/status/White-Clouds/apt-mirror2-docker/docker-image.yml
+)](https://github.com/White-Clouds/apt-mirror2-docker/actions)
+![docker size](https://img.shields.io/docker/image-size/shirokumo/apt-mirror2/latest)
+![docker pulls](https://img.shields.io/docker/pulls/shirokumo/apt-mirror2)
+
 ## 简介 About
 
 这个仓库是[apt-mirror2](https://gitlab.com/apt-mirror2/apt-mirror2 "apt-mirror2")的其中一个docker实现[shirokumo/apt-mirror2](https://hub.docker.com/r/shirokumo/apt-mirror2)的构建部分；我所作的部分就是构建一个相对较小的docker镜像来运行apt-mirror2。
@@ -18,6 +26,40 @@
 - 容器的默认`mirror.list`位置是`/etc/apt/mirror.list`
 - `mirror.list`里默认的同步位置是`/var/spool/apt-mirror`，同时也是`Nginx`的默认根目录，请不要修改
 - `Nginx`配置在`80`端口
+
+### 直接使用
+
+```
+docker run -d \
+    --name=apt-mirror2 --network=bridge --restart unless-stopped \
+    -p 81:80 \
+    -e "CRON_SCHEDULE=0 2,8,14,20 * * *" \
+    -e "TZ=Asia/Shanghai" \
+    -v /path/apt-mirror:/var/spool/apt-mirror \
+    -v /path/mirror.list:/etc/apt/mirror.list \
+    shirokumo/apt-mirror2:latest
+```
+
+### Docker Compose
+
+```
+version: '3'
+
+services:
+  apt-mirror2:
+    image: shirokumo/apt-mirror2:latest
+    network_mode: "bridge"
+    container_name: apt-mirror2
+    restart: unless-stopped
+    ports:
+      - 81:80
+    environment:
+      - CRON_SCHEDULE=0 2,8,14,20 * * *
+      - TZ=Asia/Shanghai
+    volumes:
+      - /path/apt-mirror:/var/spool/apt-mirror
+      - /path/mirror.list:/etc/apt/mirror.list
+```
 
 ## 环境变量 ENV
 
