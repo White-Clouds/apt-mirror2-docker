@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build_and_push:
+  build_latest:
     runs-on: ubuntu-latest
     steps:
       - name: Get current date
@@ -21,23 +21,6 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: |
-            shirokumo/apt-mirror2
-          labels: |
-            org.opencontainers.image.created=${{ steps.date.outputs.CURRENT_DATE }}
-            org.opencontainers.image.revision=${{ github.sha }}
-            org.opencontainers.image.title=apt-mirror2
-            org.opencontainers.image.description=一个apt-mirror2的docker实现，减小了镜像体积，添加了Nginx服务。A docker implementation of apt-mirror2, which reduces the mirror size and adds Nginx service.
-            org.opencontainers.image.licenses=GPL-3.0-or-later
-            org.opencontainers.image.authors=White-Clouds
-            org.opencontainers.image.source=https://github.com/White-Clouds/apt-mirror2-docker
-            org.opencontainers.image.url=https://github.com/White-Clouds/apt-mirror2-docker
-            org.opencontainers.image.version=5
 
       - name: login
         uses: docker/login-action@v3
@@ -56,5 +39,14 @@ jobs:
           tags: |
             shirokumo/apt-mirror2:5
             shirokumo/apt-mirror2:latest
-          labels: ${{ steps.meta.outputs.labels }}
+          labels: |
+            org.opencontainers.image.created=${{ steps.date.outputs.CURRENT_DATE }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.title=apt-mirror2
+            org.opencontainers.image.description=一个apt-mirror2的docker实现，减小了镜像体积，添加了Nginx服务。A docker implementation of apt-mirror2, which reduces the mirror size and adds Nginx service.
+            org.opencontainers.image.licenses=GPL-3.0-or-later
+            org.opencontainers.image.authors=White-Clouds
+            org.opencontainers.image.source=https://github.com/White-Clouds/apt-mirror2-docker
+            org.opencontainers.image.url=https://github.com/White-Clouds/apt-mirror2-docker
+            org.opencontainers.image.version=5
           push: true

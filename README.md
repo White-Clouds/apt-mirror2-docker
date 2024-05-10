@@ -3,8 +3,7 @@
 [![license](https://img.shields.io/github/license/White-Clouds/apt-mirror2-docker)](https://github.com/White-Clouds/apt-mirror2-docker/blob/main/LICENSE)
 [![commits](https://img.shields.io/github/commit-activity/t/White-Clouds/apt-mirror2-docker)](https://github.com/White-Clouds/apt-mirror2-docker/commits/main/)
 ![last commit](https://badgen.net/github/last-commit/White-Clouds/apt-mirror2-docker)
-[![actions](https://img.shields.io/github/actions/workflow/status/White-Clouds/apt-mirror2-docker/docker-image.yml
-)](https://github.com/White-Clouds/apt-mirror2-docker/actions)
+[![actions](https://img.shields.io/github/actions/workflow/status/White-Clouds/apt-mirror2-docker/docker-image.yml)](https://github.com/White-Clouds/apt-mirror2-docker/actions)
 ![docker size](https://img.shields.io/docker/image-size/shirokumo/apt-mirror2/latest)
 ![docker pulls](https://img.shields.io/docker/pulls/shirokumo/apt-mirror2)
 
