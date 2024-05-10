@@ -1,29 +1,27 @@
-name: latest
+name: latest-pure
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'Dockerfile'
-      - '**/docker-image.yml'
+      - 'pure/Dockerfile'
+      - '**/docker-image-pure.yml'
       - 'check.sh'
-      - 'default.conf'
-      - 'entrypoint.sh'
-      - 'healthcheck.sh'
+      - 'pure/entrypoint.sh'
+      - 'pure/healthcheck.sh'
   pull_request:
     branches:
       - main
     paths:
-      - 'Dockerfile'
-      - '**/docker-image.yml'
+      - 'pure/Dockerfile'
+      - '**/docker-image-pure.yml'
       - 'check.sh'
-      - 'default.conf'
-      - 'entrypoint.sh'
-      - 'healthcheck.sh'
+      - 'pure/entrypoint.sh'
+      - 'pure/healthcheck.sh'
 
 jobs:
-  build_latest:
+  build_latest-pure:
     runs-on: ubuntu-latest
     steps:
       - name: Get current date
@@ -48,22 +46,22 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: .
-          file: ./Dockerfile
+          context: ./pure
+          file: ./pure/Dockerfile
           platforms: |
             linux/amd64
             linux/arm64
           tags: |
-            shirokumo/apt-mirror2:5
-            shirokumo/apt-mirror2:latest
+            shirokumo/apt-mirror2:5-pure
+            shirokumo/apt-mirror2:latest-pure
           labels: |
             org.opencontainers.image.created=${{ steps.date.outputs.CURRENT_DATE }}
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.title=apt-mirror2
-            org.opencontainers.image.description=一个apt-mirror2的docker实现，减小了镜像体积，添加了Nginx服务。A docker implementation of apt-mirror2, which reduces the mirror size and adds Nginx service.
+            org.opencontainers.image.description=一个apt-mirror2的docker实现，减小了镜像体积。A docker implementation of apt-mirror2.
             org.opencontainers.image.licenses=GPL-3.0-or-later
             org.opencontainers.image.authors=White-Clouds
             org.opencontainers.image.source=https://github.com/White-Clouds/apt-mirror2-docker
             org.opencontainers.image.url=https://github.com/White-Clouds/apt-mirror2-docker
-            org.opencontainers.image.version=5
+            org.opencontainers.image.version=5-pure
           push: true
