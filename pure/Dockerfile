@@ -20,7 +20,7 @@ RUN apk update \
     && rm -rf /var/cache/apk/*
 
 # Copy .sh script to the container
-COPY ../check.sh ./healthcheck.sh ./entrypoint.sh /
+COPY check.sh pure/healthcheck.sh pure/entrypoint.sh /
 
 # Set the execution permissions for script
 RUN chmod +x /check.sh /healthcheck.sh /entrypoint.sh
