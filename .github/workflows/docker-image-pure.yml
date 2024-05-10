@@ -46,7 +46,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: ./pure
+          context: .
           file: ./pure/Dockerfile
           platforms: |
             linux/amd64
