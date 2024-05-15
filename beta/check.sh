@@ -7,18 +7,18 @@ fi
 log_path="${base_path}/var/*.log"
 for file in $log_path; do
     if [ $(tail -n 40 "$file" | grep -c "Metadata moved") -eq 1 ]; then
+        echo "Success: Check passed."
         break
     fi
-    if [ $(tail -n 40 $file | grep -c "0.0 B/sec") -eq 40 ]
-    then
+    if [ $(tail -n 40 $file | grep -c "0.0 B/sec") -eq 40 ]; then
+        echo "Error: Check failed."
         pkill -9 apt-mirror
         current_hour=$(date +%H)
         current_minute=$(date +%M)
-        if echo $CRON_SCHEDULE | awk '{print $2}' | grep -q $(($current_hour + ($current_minute >= 30 ? 1 : 0)))
-        then
+        if echo $CRON_SCHEDULE | awk '{print $2}' | grep -q $(($current_hour + ($current_minute >= 30 ? 1 : 0))); then
             break
         else
-            apt-mirror > /proc/1/fd/1 2>/proc/1/fd/2
+            apt-mirror >/proc/1/fd/1 2>/proc/1/fd/2
             break
         fi
     fi
