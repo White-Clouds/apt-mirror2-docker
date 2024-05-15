@@ -11,16 +11,6 @@ on:
       - 'default.conf'
       - 'entrypoint.sh'
       - 'healthcheck.sh'
-  pull_request:
-    branches:
-      - main
-    paths:
-      - 'Dockerfile'
-      - '**/docker-image.yml'
-      - 'check.sh'
-      - 'default.conf'
-      - 'entrypoint.sh'
-      - 'healthcheck.sh'
 
 jobs:
   build_latest:

@@ -10,15 +10,6 @@ on:
       - 'check.sh'
       - 'pure/entrypoint.sh'
       - 'pure/healthcheck.sh'
-  pull_request:
-    branches:
-      - main
-    paths:
-      - 'pure/Dockerfile'
-      - '**/docker-image-pure.yml'
-      - 'check.sh'
-      - 'pure/entrypoint.sh'
-      - 'pure/healthcheck.sh'
 
 jobs:
   build_latest-pure:
