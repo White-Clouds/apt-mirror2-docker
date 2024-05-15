@@ -1,5 +1,5 @@
 #!/bin/sh
-base_path=$(grep "^set base_path" /etc/apt/mirror.list | cut -d ' ' -f 3)
+base_path=$(grep "^set base_path" /etc/apt/mirror.list | awk '{print $3}')
 if [ -z "$base_path" ]; then
     echo "Error: Unable to find base_path in /etc/apt/mirror.list"
     exit 1
