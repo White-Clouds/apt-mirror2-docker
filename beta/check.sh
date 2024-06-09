@@ -12,13 +12,13 @@ for file in $log_path; do
             restart_flag=1
             break
         fi
-        if grep -q "ERROR a_m.a_m.APTMirror apt-mirror is already running, exiting" "$file"; then
+        if grep -q "apt-mirror is already running, exiting" "$file"; then
             restart_flag=1
             break
         fi
         lines=$(tail -n 40 "$file")
         for line in $lines; do
-            speed=$(echo "$line" | awk -F' ' '{print $(NF-1)}')
+            speed=$(echo "$line" | awk -F' ' '{print $(NF-1)}' | tr -d ':')
             unit=$(echo "$line" | awk -F' ' '{print $NF}')
             if [ "$unit" = "KiB/sec" ]; then
                 speed=$(echo "$speed*1024" | bc)
