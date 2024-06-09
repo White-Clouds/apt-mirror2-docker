@@ -12,24 +12,26 @@ for file in $log_path; do
             restart_flag=1
             break
         fi
-        if grep -q "ERROR a_m.a_m.APTMirror apt-mirror is already running, exiting" "$file"; then
+        if grep -q "apt-mirror is already running, exiting" "$file"; then
             restart_flag=1
             break
         fi
         lines=$(tail -n 40 "$file")
         for line in $lines; do
-            speed=$(echo "$line" | awk -F' ' '{print $(NF-1)}')
-            unit=$(echo "$line" | awk -F' ' '{print $NF}')
-            if [ "$unit" = "KiB/sec" ]; then
-                speed=$(echo "$speed*1024" | bc)
-            elif [ "$unit" = "MiB/sec" ]; then
-                speed=$(echo "$speed*1024*1024" | bc)
-            elif [ "$unit" = "GiB/sec" ]; then
-                speed=$(echo "$speed*1024*1024*1024" | bc)
-            fi
-            if [ $(echo "$speed < 200" | bc -l) -eq 1 ]; then
-                restart_flag=1
-                break 2
+            if echo "$line" | grep -q "HTTPDownloader Download progress"; then
+                speed=$(echo "$line" | awk -F' ' '{print $(NF-1)}' | tr -dc '0-9.')
+                unit=$(echo "$line" | awk -F' ' '{print $NF}')
+                if [ "$unit" = "KiB/sec" ]; then
+                    speed=$(echo "$speed*1024" | bc)
+                elif [ "$unit" = "MiB/sec" ]; then
+                    speed=$(echo "$speed*1024*1024" | bc)
+                elif [ "$unit" = "GiB/sec" ]; then
+                    speed=$(echo "$speed*1024*1024*1024" | bc)
+                fi
+                if [ $(echo "$speed < 200" | bc -l) -eq 1 ]; then
+                    restart_flag=1
+                    break 2
+                fi
             fi
         done
         if [ $restart_flag -eq 1 ]; then
