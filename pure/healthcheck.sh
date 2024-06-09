@@ -1,6 +1,5 @@
 #!/bin/sh
-grep -q "ERROR" /var/spool/apt-mirror/var/*.log
-if [ $? -ne 0 ]
+if ! grep -q "ERROR" /var/spool/apt-mirror/var/*.log
 then
     echo "Success: Healthcheck passed."
     exit 0

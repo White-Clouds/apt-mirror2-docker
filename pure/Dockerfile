@@ -11,7 +11,7 @@ RUN apk update \
     && apk add \
         python3 py3-pip tzdata dpkg \
     && pip3 install --no-cache-dir --break-system-packages \
-        apt-mirror==5 uvloop \
+        apt-mirror==6 uvloop \
     && pip3 cache purge \
     && pip3 uninstall --no-cache-dir --break-system-packages -y \
 		pip setuptools wheel \
