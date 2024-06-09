@@ -23,12 +23,16 @@ for file in $log_path; do
                 unit=$(echo "$line" | awk -F' ' '{print $NF}')
                 if [ "$unit" = "KiB/sec" ]; then
                     speed=$(echo "$speed*1024" | bc)
+                    echo "$speed" #debug
                 elif [ "$unit" = "MiB/sec" ]; then
                     speed=$(echo "$speed*1024*1024" | bc)
+                    echo "$speed" #debug
                 elif [ "$unit" = "GiB/sec" ]; then
                     speed=$(echo "$speed*1024*1024*1024" | bc)
+                    echo "$speed" #debug
                 fi
                 if [ $(echo "$speed < 200" | bc -l) -eq 1 ]; then
+                    echo "$speed" #debug
                     restart_flag=1
                     break 2
                 fi
@@ -44,7 +48,11 @@ if [ $restart_flag -eq 1 ]; then
     pkill -9 apt-mirror
     current_hour=$(date +%H)
     current_minute=$(date +%M)
-    if echo $CRON_SCHEDULE | awk '{print $2}' | grep -q $(($current_hour + ($current_minute >= 30 ? 1 : 0))); then
+    cron_hours=$(echo $CRON_SCHEDULE | awk '{print $2}' | tr ',' ' ')
+    if echo "$cron_hours" | grep -wq $(($current_hour + ($current_minute >= 30 ? 1 : 0))); then
+        echo "$current_hour" #debug
+        echo "$current_minute" #debug
+        echo "$cron_hours" #debug
         exit 0
     else
         apt-mirror >/proc/1/fd/1 2>/proc/1/fd/2
