@@ -16,7 +16,8 @@ for file in $log_path; do
             restart_flag=1
             break
         fi
-        tail -n 40 "$file" | while IFS= read -r line; do
+        lines=$(tail -n 40 "$file")
+        for line in $lines; do
             speed=$(echo "$line" | awk -F' ' '{print $(NF-1)}')
             unit=$(echo "$line" | awk -F' ' '{print $NF}')
             if [ "$unit" = "KiB/sec" ]; then
