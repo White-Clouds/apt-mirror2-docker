@@ -8,7 +8,9 @@ log_path="${base_path}/var/*.log"
 restart_flag=0
 for file in $log_path; do
     if [ "${file}" != "${base_path}/var/apt-mirror2.log" ]; then
-        if [ $(tail -n 40 "$file" | grep -c "Metadata moved") -eq 0 ]; then
+        if [ $(tail -n 40 "$file" | grep -c "Metadata moved") -eq 1 ]; then
+            break
+        else
             restart_flag=1
             break
         fi
@@ -16,29 +18,9 @@ for file in $log_path; do
             restart_flag=1
             break
         fi
-        lines=$(tail -n 40 "$file")
-        for line in $lines; do
-            if echo "$line" | grep -q "HTTPDownloader Download progress"; then
-                speed=$(echo "$line" | awk -F' ' '{print $(NF-1)}' | tr -dc '0-9.')
-                unit=$(echo "$line" | awk -F' ' '{print $NF}')
-                if [ "$unit" = "KiB/sec" ]; then
-                    speed=$(echo "$speed*1024" | bc)
-                    echo "$speed" #debug
-                elif [ "$unit" = "MiB/sec" ]; then
-                    speed=$(echo "$speed*1024*1024" | bc)
-                    echo "$speed" #debug
-                elif [ "$unit" = "GiB/sec" ]; then
-                    speed=$(echo "$speed*1024*1024*1024" | bc)
-                    echo "$speed" #debug
-                fi
-                if [ $(echo "$speed < 200" | bc -l) -eq 1 ]; then
-                    echo "$speed" #debug
-                    restart_flag=1
-                    break 2
-                fi
-            fi
-        done
-        if [ $restart_flag -eq 1 ]; then
+        zero_speed_count=$(tail -n 40 "$file" | grep -c "0.0 B/sec")
+        if [ "$zero_speed_count" -ge 30 ]; then
+            restart_flag=1
             break
         fi
     fi
@@ -49,10 +31,8 @@ if [ $restart_flag -eq 1 ]; then
     current_hour=$(date +%H)
     current_minute=$(date +%M)
     cron_hours=$(echo $CRON_SCHEDULE | awk '{print $2}' | tr ',' ' ')
-    if echo "$cron_hours" | grep -wq $(($current_hour + ($current_minute >= 30 ? 1 : 0))); then
-        echo "$current_hour" #debug
-        echo "$current_minute" #debug
-        echo "$cron_hours" #debug
+    cron_minute=$(echo $CRON_SCHEDULE | awk '{print $1}')
+    if echo "$cron_hours" | grep -wq $(($current_hour + ($current_minute >= $cron_minute ? 1 : 0))); then
         exit 0
     else
         apt-mirror >/proc/1/fd/1 2>/proc/1/fd/2
