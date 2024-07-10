@@ -16,6 +16,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Clone external repository
+        run: git clone https://gitlab.com/apt-mirror2/apt-mirror2.git ./apt-mirror2
+
       - name: login
         uses: docker/login-action@v3
         with:
@@ -33,7 +36,7 @@ jobs:
             org.opencontainers.image.created=${{ steps.date.outputs.CURRENT_DATE }}
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.title=apt-mirror2
-            org.opencontainers.image.description=一个apt-mirror2的docker实现，减小了镜像体积，添加了Nginx服务。A docker implementation of apt-mirror2, which reduces the mirror size and adds Nginx service.
+            org.opencontainers.image.description=一个apt-mirror2的docker实现，添加了Nginx服务。A docker implementation of apt-mirror2 with Nginx service added.
             org.opencontainers.image.licenses=GPL-3.0-or-later
             org.opencontainers.image.authors=White-Clouds
             org.opencontainers.image.source=https://github.com/White-Clouds/apt-mirror2-docker
