@@ -10,6 +10,7 @@ RUN apk update ;\
     wget https://gitlab.com/apt-mirror2/apt-mirror2/-/archive/v7/apt-mirror2-v7.tar.gz ;\
     mkdir -p /tmp/apt-mirror2/ ;\
     tar -xzf apt-mirror2-v7.tar.gz --strip-components=1 -C /tmp/apt-mirror2/ ;\
+    rm -rf apt-mirror2-v7.tar.gz ;\
     cd /tmp/apt-mirror2 ;\
     pip --disable-pip-version-check --no-cache-dir install \
         -r requirements.txt \
