@@ -1,12 +1,11 @@
-# Same as the initial build in https://gitlab.com/apt-mirror2/apt-mirror2/-/blob/master/Dockerfile
-FROM python:3.10-alpine as builder
+# Similar as the initial build in https://gitlab.com/apt-mirror2/apt-mirror2/-/blob/master/Dockerfile
+FROM python:alpine as builder
 SHELL ["/bin/sh", "-ex", "-c"]
 
-COPY /home/runner/work/apt-mirror2-docker/apt-mirror2-docker/apt-mirror2/ /tmp/apt-mirror2/
-
-RUN if which apk > /dev/null; then \
-        apk add --no-cache binutils ;\
-    fi ;\
+RUN apk update ;\
+    apk upgrade ;\
+    apk add --no-cache binutils git ;\
+    git clone https://gitlab.com/apt-mirror2/apt-mirror2.git /tmp/apt-mirror2/ ;\
     cd /tmp/apt-mirror2 ;\
     pip --disable-pip-version-check --no-cache-dir install \
         -r requirements.txt \
@@ -34,7 +33,7 @@ COPY --from=builder /dist/apt-mirror /usr/local/bin/apt-mirror
 
 RUN apk update && \
     apk upgrade && \
-    apk add nginx tzdata && \
+    apk add --no-cache nginx tzdata && \
     rm -rf /var/cache/apk/*
 
 COPY check.sh healthcheck.sh entrypoint.sh /

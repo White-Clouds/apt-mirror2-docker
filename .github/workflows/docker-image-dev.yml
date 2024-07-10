@@ -16,9 +16,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Clone external repository
-        run: git clone https://gitlab.com/apt-mirror2/apt-mirror2.git ./apt-mirror2 && pwd
-
       - name: login
         uses: docker/login-action@v3
         with:
