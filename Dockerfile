@@ -41,6 +41,8 @@ RUN apk update &&\
     rm -rf /var/cache/apk/* &&\
     apk cache clean
 
+COPY default.conf /etc/nginx/http.d/default.conf
+
 COPY check.sh healthcheck.sh entrypoint.sh /
 
 RUN chmod +x /check.sh /healthcheck.sh /entrypoint.sh
