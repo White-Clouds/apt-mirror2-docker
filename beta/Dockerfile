@@ -4,8 +4,12 @@ SHELL ["/bin/sh", "-ex", "-c"]
 
 RUN apk update ;\
     apk upgrade ;\
-    apk add --no-cache binutils git ;\
-    git clone https://gitlab.com/apt-mirror2/apt-mirror2.git /tmp/apt-mirror2/ ;\
+    apk add --no-cache binutils ;\
+    rm -rf /var/cache/apk/* ;\
+    apk cache clean ;\
+    wget https://gitlab.com/apt-mirror2/apt-mirror2/-/archive/v7/apt-mirror2-v7.tar.gz ;\
+    mkdir -p /tmp/apt-mirror2/ ;\
+    tar -xzf apt-mirror2-v7.tar.gz --strip-components=1 -C /tmp/apt-mirror2/ ;\
     cd /tmp/apt-mirror2 ;\
     pip --disable-pip-version-check --no-cache-dir install \
         -r requirements.txt \
@@ -31,10 +35,11 @@ EXPOSE 80
 
 COPY --from=builder /dist/apt-mirror /usr/local/bin/apt-mirror
 
-RUN apk update && \
-    apk upgrade && \
-    apk add --no-cache nginx tzdata && \
-    rm -rf /var/cache/apk/*
+RUN apk update &&\
+    apk upgrade &&\
+    apk add --no-cache nginx tzdata &&\
+    rm -rf /var/cache/apk/* &&\
+    apk cache clean
 
 COPY check.sh healthcheck.sh entrypoint.sh /
 
