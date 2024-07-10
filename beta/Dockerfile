@@ -2,7 +2,7 @@
 FROM python:3.10-alpine as builder
 SHELL ["/bin/sh", "-ex", "-c"]
 
-COPY ./apt-mirror2/ /tmp/apt-mirror2/
+COPY /home/runner/work/apt-mirror2-docker/apt-mirror2-docker/apt-mirror2/ /tmp/apt-mirror2/
 
 RUN if which apk > /dev/null; then \
         apk add --no-cache binutils ;\
