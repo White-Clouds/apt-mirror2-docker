@@ -9,4 +9,5 @@ echo "$TZ" > /etc/timezone
 } > /etc/crontabs/apt-mirror2
 chmod 0644 /etc/crontabs/apt-mirror2
 crontab /etc/crontabs/apt-mirror2
+nginx
 crond -f
