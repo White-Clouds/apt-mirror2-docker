@@ -6,6 +6,21 @@ if [ -z "$base_path" ]; then
 fi
 log_path="${base_path}/var/*.log"
 restart_flag=0
+target_speed_kb=100
+
+get_actual_speed() {
+    interface=$(ip route get 8.8.8.8 | awk -- '{printf $5}')
+    if [ -n "$interface" ]; then
+        speed_bps=$(cat /sys/class/net/$interface/statistics/rx_bytes)
+        sleep 1
+        speed_bps_new=$(cat /sys/class/net/$interface/statistics/rx_bytes)
+        speed_kbps=$(( (speed_bps_new - speed_bps) / 1024 ))
+        echo $speed_kbps
+    else
+        echo 0
+    fi
+}
+
 for file in $log_path; do
     if [ "${file}" != "${base_path}/var/apt-mirror2.log" ]; then
         if [ $(tail -n 40 "$file" | grep -c "Metadata moved") -eq 1 ]; then
@@ -19,12 +34,14 @@ for file in $log_path; do
             break
         fi
         zero_speed_count=$(tail -n 40 "$file" | grep -c "0.0 B/sec")
-        if [ "$zero_speed_count" -ge 30 ]; then
+        actual_speed=$(get_actual_speed)
+        if [ "$zero_speed_count" -ge 30 ] && [ "$actual_speed" -lt "$target_speed_kb" ]; then
             restart_flag=1
             break
         fi
     fi
 done
+
 if [ $restart_flag -eq 1 ]; then
     echo "Error: Check failed."
     pkill -9 apt-mirror
