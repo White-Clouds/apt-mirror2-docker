@@ -58,7 +58,12 @@ RUN apk update && \
     --without-http_limit_req_module \
     --without-http_empty_gif_module \
     --without-http_browser_module \
-    --without-http_upstream_*_module \
+    --without-http_upstream_hash_module \
+    --without-http_upstream_ip_hash_module \
+    --without-http_upstream_least_conn_module \
+    --without-http_upstream_random_module \
+    --without-http_upstream_keepalive_module \
+    --without-http_upstream_zone_module \
     --without-mail_*_module \
     --without-stream_*_module && \
     make && \
