@@ -32,8 +32,11 @@ SHELL ["/bin/sh", "-ex", "-c"]
 RUN apk update && \
     apk upgrade && \
     apk add --no-cache build-base pcre-dev zlib-dev openssl-dev wget && \
+    rm -rf /var/cache/apk/* ;\
+    apk cache clean ;\
     wget https://nginx.org/download/nginx-1.26.1.tar.gz && \
     tar -xzf nginx-1.26.1.tar.gz && \
+    rm -rf nginx-1.26.1.tar.gz && \
     cd nginx-1.26.1 && \
     ./configure \
     --without-http_charset_module \
@@ -92,7 +95,7 @@ EXPOSE 80
 
 COPY --from=aptMirrorBuilder /dist/apt-mirror /usr/local/bin/apt-mirror
 COPY --from=nginxBuilder /usr/local/nginx/sbin/nginx /usr/local/sbin/nginx
-COPY --from=nginxBuilder /usr/local/nginx/conf /etc/nginx
+COPY --from=nginxBuilder /usr/local/nginx/conf /usr/local/nginx/conf
 
 RUN apk update &&\
     apk upgrade &&\
