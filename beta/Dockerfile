@@ -30,7 +30,7 @@ FROM alpine:3 as nginxBuilder
 SHELL ["/bin/sh", "-ex", "-c"]
 
 RUN apk update && \
-    apk upgrade &&\
+    apk upgrade && \
     apk add --no-cache build-base pcre-dev zlib-dev openssl-dev wget && \
     wget https://nginx.org/download/nginx-1.26.1.tar.gz && \
     tar -xzf nginx-1.26.1.tar.gz && \
@@ -64,8 +64,20 @@ RUN apk update && \
     --without-http_upstream_random_module \
     --without-http_upstream_keepalive_module \
     --without-http_upstream_zone_module \
-    --without-mail_*_module \
-    --without-stream_*_module && \
+    --without-mail_pop3_module \
+    --without-mail_imap_module \
+    --without-mail_smtp_module \
+    --without-stream_limit_conn_module \
+    --without-stream_access_module \
+    --without-stream_geo_module \
+    --without-stream_map_module \
+    --without-stream_split_clients_module \
+    --without-stream_return_module \
+    --without-stream_set_module \
+    --without-stream_upstream_hash_module \
+    --without-stream_upstream_least_conn_module \
+    --without-stream_upstream_random_module \
+    --without-stream_upstream_zone_module && \
     make && \
     make install
 
