@@ -1,5 +1,5 @@
 # Similar as the initial build in https://gitlab.com/apt-mirror2/apt-mirror2/-/blob/master/Dockerfile
-FROM python:alpine as builder
+FROM python:alpine as aptMirrorBuilder
 SHELL ["/bin/sh", "-ex", "-c"]
 
 RUN apk update ;\
@@ -25,7 +25,21 @@ RUN apk update ;\
         --name apt-mirror \
         /usr/local/bin/apt-mirror
 
-# Customize, add Nginx
+# Nginx build
+FROM alpine:3 as nginxBuilder
+SHELL ["/bin/sh", "-ex", "-c"]
+
+RUN apk update && \
+    apk upgrade &&\
+    apk add --no-cache build-base pcre-dev zlib-dev openssl-dev wget && \
+    wget https://nginx.org/download/nginx-1.26.1.tar.gz && \
+    tar -xzf nginx-1.26.1.tar.gz && \
+    cd nginx-1.26.1 && \
+    ./configure --with-http_autoindex_module --without-http_rewrite_module --without-http_gzip_module --without-http_proxy_module && \
+    make && \
+    make install
+
+# Final image
 FROM alpine:3
 SHELL ["/bin/sh", "-ex", "-c"]
 
@@ -34,11 +48,13 @@ ENV TZ=Asia/Shanghai \
 
 EXPOSE 80
 
-COPY --from=builder /dist/apt-mirror /usr/local/bin/apt-mirror
+COPY --from=aptMirrorBuilder /dist/apt-mirror /usr/local/bin/apt-mirror
+COPY --from=nginxBuilder /usr/local/nginx/sbin/nginx /usr/local/sbin/nginx
+COPY --from=nginxBuilder /usr/local/nginx/conf /etc/nginx
 
 RUN apk update &&\
     apk upgrade &&\
-    apk add --no-cache nginx tzdata &&\
+    apk add --no-cache tzdata &&\
     rm -rf /var/cache/apk/* &&\
     apk cache clean
 
