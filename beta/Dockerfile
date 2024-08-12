@@ -44,9 +44,9 @@ RUN apk update &&\
 
 COPY default.conf /etc/nginx/http.d/default.conf
 
-#COPY check.sh healthcheck.sh entrypoint.sh /
+COPY healthcheck.sh entrypoint.sh /
 
-RUN chmod +x /check.sh /healthcheck.sh /entrypoint.sh
+RUN chmod +x /healthcheck.sh /entrypoint.sh
 
 HEALTHCHECK --interval=5m --timeout=10s --start-period=10s --retries=3 CMD /bin/sh /healthcheck.sh
 
