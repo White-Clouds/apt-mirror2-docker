@@ -7,10 +7,10 @@ RUN apk update ;\
     apk add --no-cache binutils ;\
     rm -rf /var/cache/apk/* ;\
     apk cache clean ;\
-    wget https://gitlab.com/apt-mirror2/apt-mirror2/-/archive/v7/apt-mirror2-v7.tar.gz ;\
+    wget https://gitlab.com/apt-mirror2/apt-mirror2/-/archive/v8/apt-mirror2-v8.tar.gz ;\
     mkdir -p /tmp/apt-mirror2/ ;\
-    tar -xzf apt-mirror2-v7.tar.gz --strip-components=1 -C /tmp/apt-mirror2/ ;\
-    rm -rf apt-mirror2-v7.tar.gz ;\
+    tar -xzf apt-mirror2-v8.tar.gz --strip-components=1 -C /tmp/apt-mirror2/ ;\
+    rm -rf apt-mirror2-v8.tar.gz ;\
     cd /tmp/apt-mirror2 ;\
     pip --disable-pip-version-check --no-cache-dir install \
         -r requirements.txt \
@@ -44,9 +44,9 @@ RUN apk update &&\
 
 COPY default.conf /etc/nginx/http.d/default.conf
 
-COPY check.sh healthcheck.sh entrypoint.sh /
+COPY healthcheck.sh entrypoint.sh /
 
-RUN chmod +x /check.sh /healthcheck.sh /entrypoint.sh
+RUN chmod +x /healthcheck.sh /entrypoint.sh
 
 HEALTHCHECK --interval=5m --timeout=10s --start-period=10s --retries=3 CMD /bin/sh /healthcheck.sh
 
