@@ -43,7 +43,7 @@ jobs:
             linux/amd64
             linux/arm64
           tags: |
-            shirokumo/apt-mirror2:7-pure
+            shirokumo/apt-mirror2:8-pure
             shirokumo/apt-mirror2:latest-pure
           labels: |
             org.opencontainers.image.created=${{ steps.date.outputs.CURRENT_DATE }}
@@ -54,5 +54,5 @@ jobs:
             org.opencontainers.image.authors=White-Clouds
             org.opencontainers.image.source=https://github.com/White-Clouds/apt-mirror2-docker
             org.opencontainers.image.url=https://github.com/White-Clouds/apt-mirror2-docker
-            org.opencontainers.image.version=7-pure
+            org.opencontainers.image.version=8-pure
           push: true
