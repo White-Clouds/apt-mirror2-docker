@@ -7,7 +7,7 @@ RUN apk update ;\
     apk add --no-cache binutils ;\
     rm -rf /var/cache/apk/* ;\
     apk cache clean ;\
-    wget https://gitlab.com/apt-mirror2/apt-mirror2/-/archive/v8/apt-mirror2-v8.tar.gz ;\
+    wget https://gitlab.com/apt-mirror2/apt-mirror2/-/archive/v9-1/apt-mirror2-v9-1.tar.gz ;\
     mkdir -p /tmp/apt-mirror2/ ;\
     tar -xzf apt-mirror2-v8.tar.gz --strip-components=1 -C /tmp/apt-mirror2/ ;\
     rm -rf apt-mirror2-v8.tar.gz ;\

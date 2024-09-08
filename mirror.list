@@ -1,0 +1,141 @@
+## 工作目录的路径
+set base_path         /var/spool/apt-mirror
+## 所有镜像都将保存到 mirror_path
+set mirror_path       $base_path/mirror
+## 初始元数据同步路径
+set skel_path         $base_path/skel
+## 可变数据路径
+set var_path          $base_path/var
+
+## apt_auth.conf 的路径。请参阅 `man apt_auth.conf`
+# set etc_netrc         /etc/apt/auth.conf
+
+## 当没有为存储库明确指定 arch 时使用。
+## 对于 Debian 系统，默认为主机的 arch，对于非 Debian 系统，默认为 amd64。
+# set defaultarch       amd64
+set nthreads          8
+
+## 速率限制（以字节/秒为单位）。允许使用后缀 `k`和 `m`。默认情况下不启用
+## 设置的值不能低于 `slow_rate`的值
+# set limit_rate        1k
+
+## 启用低速下载保护。默认为 `on`
+# set slow_rate_protection on
+## 慢速下载保护不会应用于每个单独下载文件的时间段（以秒为单位）。
+# set slow_rate_startup  15
+## 慢速下载保护阈值。
+# set slow_rate          100k
+
+set _tilde            0
+
+## 如果可用，使用 uvloop
+# set uvloop            1
+
+## 代理配置
+## 仅支持 http 代理
+# set use_proxy             off
+## 如果省略代理方案，则假定为 `http://`
+# set http_proxy            127.0.0.1:3128
+# set https_proxy           127.0.0.1:3128
+# set proxy_user            user
+# set proxy_password        password
+
+## http 代理的 User agent，默认为 `apt-mirror2/VERSION`
+# set http_user_agent       apt-mirror2
+
+## 配置是否验证 https 证书
+# set no_check_certificate  off
+## 自定义 CA 证书包的路径
+# set ca_certificate        /etc/ssl/certs/ca-certificates.crt
+## HTTP 客户端身份验证的客户端证书和私钥路径
+# set certificate           /etc/ssl/certs/certificate.crt
+# set private_key           /etc/ssl/certs/key.pem
+
+## 是否像 apt-mirror 一样写入文件列表（全部、新、MD5、SHA256、SHA512 文件）
+## 默认 `off`，因为 apt-mirror2 不使用它们
+# set write_file_lists        off
+
+## 启用 Prometheus 客户端
+# set prometheus_enable   off
+# set prometheus_host     localhost
+# set prometheus_port     8000
+
+## 重试
+## 重试下载损坏的发布文件多少次
+# set release_files_retries 15
+
+## 镜像完成后运行脚本
+# set run_postmirror    0
+## 镜像脚本的路径
+## 所有配置变量均可在 `postmirror_script`中使用
+## 并以 `APT_MIRROR_`为前缀大写，例如 `${APT_MIRROR_BASE_PATH}`
+# set postmirror_script $var_path/postmirror.sh
+
+## 默认情况下，镜像更新后不会删除冗余文件。
+## 在 `cleanscript` 选项指定的路径中创建可用于清理镜像的Shell脚本。
+# set cleanscript     $var_path/clean.sh
+
+## 如果指定并启用了 `_autoclean` 选项，则不会创建清理脚本，在下载结束后就清理镜像
+# set _autoclean 0
+## 为了保护存储库免遭错误删除，当需要清理的总大小超过 `repository_size * wipe_size_ratio`
+## 或需要删除的文件总数超过 `repository_files_count * wipe_count_ratio` 时，请不要执行存储库清理。
+## 使用 0 禁用删除保护。
+# set wipe_size_ratio 0.4
+# set wipe_count_ratio 0.4
+
+
+## 使用标准 sources.list 语法配置镜像
+## 二进制文件镜像
+deb [ arch=amd64,arm64 ] http://archive.ubuntu.com/ubuntu mantic main restricted universe multiverse
+
+## 或者使用`deb-arch`
+# deb-amd64 http://archive.ubuntu.com/ubuntu mantic main restricted universe multiverse
+# deb-arm64 http://archive.ubuntu.com/ubuntu mantic main restricted universe multiverse
+
+## 尽管 sources.list 不支持，但可以在这里指定用逗号分隔的代号或目录（不带空格）。
+# deb-amd64 http://archive.ubuntu.com/ubuntu mantic,jammy main restricted universe multiverse
+# deb https://packages.ntop.org/apt-stable/20.04/ x64/,all/
+
+## `by-hash` 选项可用于控制使用 hashsums 路径的镜像。
+## 如果此源表示支持此功能，则 `yes`或 `no` 值将激活/禁用此功能，而无论源指示什么， `force` 都将启用此功能。
+## 默认 - `yes`
+# deb [ arch=amd64,arm64 by-hash=no ] http://archive.ubuntu.com/ubuntu mantic main restricted universe multiverse
+
+## 源代码镜像
+# deb-src http://archive.ubuntu.com/ubuntu mantic main restricted universe multiverse
+# deb-src http://archive.ubuntu.com/ubuntu mantic-security main restricted universe multiverse
+# deb-src http://archive.ubuntu.com/ubuntu mantic-updates main restricted universe multiverse
+# deb-src http://archive.ubuntu.com/ubuntu mantic-backports main restricted universe multiverse
+
+## `arch` 选项的特殊 `src` 值也可用于指定 src 存储库
+# deb [ arch=src ] http://archive.ubuntu.com/ubuntu mantic main restricted universe multiverse
+
+## 默认情况下，镜像文件夹的名称由镜像 URL 构成。
+## 使用 mirror_path 可以覆盖镜像文件夹名称
+# mirror_path http://archive.ubuntu.com/ubuntu ubuntu
+
+## 忽略指定存储库路径的错误。
+## 可以是精确的文件或文件夹。
+# ignore_errors https://packages.gitlab.com/runner/gitlab-runner/debian pool/bullseye/main/g/gitlab-runner/gitlab-runner_14.8.1_amd64.deb
+
+## 镜像具有指定名称的源包和从具有指定名称的源包构建的二进制包。
+## 若未指定 - 镜像所有包。
+# include_source_name http://archive.ubuntu.com/ubuntu source_name1 source_name2 source_name3
+
+## 不要镜像具有指定名称的源包和从具有指定名称的源包构建的二进制包。
+## 若未指定 - 则不排除包。
+# exclude_source_name http://archive.ubuntu.com/ubuntu source_name1 source_name2 source_name3
+
+## 镜像具有指定名称的镜像二进制包。
+## 若未指定 - 镜像所有包。
+# include_binary_packages http://archive.ubuntu.com/ubuntu binary_package1 binary_package2
+
+## 不要镜像具有指定名称的二进制包。
+## 若未指定 - 则不排除包。
+# exclude_binary_packages http://archive.ubuntu.com/ubuntu binary_package1 binary_package2
+
+## 如果指定 - 清理存储库中的冗余文件（查看 _autoclean 选项）
+clean http://archive.ubuntu.com/ubuntu
+## 如果指定且启用了存储库清理 - 跳过清理中的指定路径
+skip-clean http://archive.ubuntu.com/ubuntu/pool/c/curl
+skip-clean http://archive.ubuntu.com/ubuntu/dists/xenial
