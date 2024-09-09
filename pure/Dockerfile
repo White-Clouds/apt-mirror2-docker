@@ -1,5 +1,5 @@
 # Similar as the initial build in https://gitlab.com/apt-mirror2/apt-mirror2/-/blob/master/Dockerfile
-FROM python:alpine as builder
+FROM python:3.10-alpine AS builder
 SHELL ["/bin/sh", "-ex", "-c"]
 
 RUN apk update ;\
