@@ -12,7 +12,7 @@ RUN apk update ;\
     tar -xzf apt-mirror2-v8.tar.gz --strip-components=1 -C /tmp/apt-mirror2/ ;\
     rm -rf apt-mirror2-v8.tar.gz ;\
     cd /tmp/apt-mirror2 ;\
-    echo "setuptools==74.1.2" >> requirements/dev.txt ;\
+    echo "setuptools==74.1.2 --hash=sha256:5f4c08aa4d3ebcb57a50c33b1b07e94315d7fc7230f7115e47fc99776c8ce308" >> requirements/dev.txt ;\
     pip --disable-pip-version-check --no-cache-dir install \
         -r requirements.txt \
         -r requirements/dev.txt ;\
