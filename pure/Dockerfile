@@ -1,5 +1,5 @@
 # Similar as the initial build in https://gitlab.com/apt-mirror2/apt-mirror2/-/blob/master/Dockerfile
-FROM python:alpine as builder
+FROM python:alpine AS builder
 SHELL ["/bin/sh", "-ex", "-c"]
 
 RUN apk update ;\
@@ -7,10 +7,10 @@ RUN apk update ;\
     apk add --no-cache binutils ;\
     rm -rf /var/cache/apk/* ;\
     apk cache clean ;\
-    wget https://gitlab.com/apt-mirror2/apt-mirror2/-/archive/v9-2/apt-mirror2-v9-2.tar.gz ;\
+    wget https://gitlab.com/apt-mirror2/apt-mirror2/-/archive/v8/apt-mirror2-v8.tar.gz ;\
     mkdir -p /tmp/apt-mirror2/ ;\
-    tar -xzf apt-mirror2-v9-2.tar.gz --strip-components=1 -C /tmp/apt-mirror2/ ;\
-    rm -rf apt-mirror2-v9-2.tar.gz ;\
+    tar -xzf apt-mirror2-v8.tar.gz --strip-components=1 -C /tmp/apt-mirror2/ ;\
+    rm -rf apt-mirror2-v8.tar.gz ;\
     cd /tmp/apt-mirror2 ;\
     pip --disable-pip-version-check --no-cache-dir install \
         -r requirements.txt \
