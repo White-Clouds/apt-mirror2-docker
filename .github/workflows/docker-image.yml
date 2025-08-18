@@ -21,7 +21,7 @@ jobs:
         run: echo "CURRENT_DATE=$(date --rfc-3339=seconds)" >> $GITHUB_OUTPUT
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
